@@ -1,0 +1,22 @@
+$SourceSiteURL = "https://sourceA.sharepoint.com/sites/sourceA"
+$TargetSiteURL = "https://targetB.sharepoint.com/sites/targetB"
+$TemplateFolder = "$env:TEMP\Templates2"
+
+
+Connect-PnPOnline -Url $SourceSiteURL -Interactive
+$TemplateFileNames= "List1", "List2", "List3"
+
+foreach ($fileName in $TemplateFileNames) {
+    $TemplateFile = "$TemplateFolder\$fileName.xml"
+    Get-PnPSiteTemplate -Out $TemplateFile -ListsToExtract $fileName -Handlers Lists
+}
+
+
+Connect-PnPOnline -Url $TargetSiteURL -Interactive
+
+$TemplateFileNames= "List1", "List2", "List3"
+
+foreach ($fileName in $TemplateFileNames) {
+    $TemplateFile = "$TemplateFolder\$fileName.xml"
+    Invoke-PnPSiteTemplate -Path $TemplateFile
+}
