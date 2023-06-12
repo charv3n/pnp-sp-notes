@@ -9,9 +9,10 @@ $TemplateFileNames= "List1", "List2", "List3"
 foreach ($fileName in $TemplateFileNames) {
     $TemplateFile = "$TemplateFolder\$fileName.xml"
     Get-PnPSiteTemplate -Out $TemplateFile -ListsToExtract $fileName -Handlers Lists
+   
 }
-
-
+// Add the line below in the for loop above if you want to copy items inside list.
+// Add-PnPDataRowsToSiteTemplate -Path $TemplateFile -List $fileName
 Connect-PnPOnline -Url $TargetSiteURL -Interactive
 
 $TemplateFileNames= "List1", "List2", "List3"
