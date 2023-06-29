@@ -1,0 +1,47 @@
+
+
+#====================================================FOR SINGLE FILE==============================
+#Parameters
+$SourceSiteURL = "https://source.sharepoint.com/sites/marketing"
+$TargetSiteURL = "https://target.sharepoint.com/sites/marketing"
+$PageName =  "About.aspx"
+  
+#Connect to Source Site
+Connect-PnPOnline -Url $SourceSiteURL -Interactive
+  
+#Export the Source page
+$TempFile = [System.IO.Path]::GetTempFileName()
+Export-PnPPage -Force -Identity $PageName -Out $TempFile
+  
+#Import to the Target Site 
+Connect-PnPOnline -Url $TargetSiteURL  -Interactive
+Invoke-PnPSiteTemplate -Path $TempFile
+
+
+
+
+#====================================================FOR MULTIPLE FILE==============================
+# Parameters
+$SourceSiteURL = "https://source.sharepoint.com/sites/marketing"
+$TargetSiteURL = "https://target.sharepoint.com/sites/marketing"
+$PageNames =  "About.aspx", "Contact.aspx", "Services.aspx"
+  
+# Connect to Source Site
+Connect-PnPOnline -Url $SourceSiteURL -Interactive
+  
+# Loop through page names
+
+foreach ($PageName in $PageNames) {
+    # Export the Source page
+    $TempFile = [System.IO.Path]::GetTempFileName()
+    Export-PnPPage -Force -Identity $PageName -Out $TempFile
+}
+
+# Connect to Source Site
+Connect-PnPOnline -Url $TargetSiteURL -Interactive
+
+# Import to the Target Site 
+foreach ($PageName in $PageNames) {
+    $TempFile = [System.IO.Path]::GetTempFileName() + $PageName
+    Invoke-PnPSiteTemplate -Path $TempFile
+}
